@@ -1,17 +1,22 @@
 const express = require("express");
+const { check } = require("express-validator");
 
-const usersController = require('../controllers/users-controller');
+const usersControllers = require("../controllers/users-controllers");
 
 const router = express.Router();
 
-router.get("/:pid", placesControllers.getPlaceById);
+router.get("/", usersControllers.getUsers);
 
-router.get("/user/:uid", placesControllers.getPlacesByUserId);
+router.post(
+  "/signup",
+  [
+    check("name").not().isEmpty(),
+    check("email").normalizeEmail().isEmail(),
+    check("password").isLength({ min: 6 }),
+  ],
+  usersControllers.signup
+);
 
-router.post('/', placesControllers.createPlace);
-
-router.patch('/:pid', placesControllers.updatePlace);
-
-router.delete('/:pid', placesControllers.deletePlace);
+router.post("/login", usersControllers.login);
 
 module.exports = router;
