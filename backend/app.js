@@ -30,6 +30,6 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(`mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.fmsfmtp.mongodb.net/${process.env.NAME}?retryWrites=true&w=majority`)
+  .connect(process.env.URL)
   .then(() => app.listen(8000))
   .catch((err) => console.log(err));
