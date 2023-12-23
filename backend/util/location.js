@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const HttpError = require('../models/http-error');
 
-const API_KEY = process.env.REACT_APP_MAP;
+const API_KEY = process.env.MAP;
 
 async function getCoordsForAddress(address) {
   const response = await axios.get(
