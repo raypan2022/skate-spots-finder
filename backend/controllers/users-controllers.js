@@ -16,7 +16,7 @@ const getUsers = async (req, res, next) => {
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return next(new HttpError("invalid input passed", 422));
+    return next(new HttpError("invalid input passed bro", 422));
   }
 
   const { name, email, password } = req.body;
@@ -37,10 +37,9 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
+    image: req.file.path,
     password,
-    image:
-      "https://hips.hearstapps.com/hmg-prod/images/gettyimages-1229892983-square.jpg",
-    places: []
+    places: [],
   });
 
   try {

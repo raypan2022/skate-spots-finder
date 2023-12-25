@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const { v4: uuid } = require("uuid");
 const { validationResult } = require("express-validator");
 const mongoose = require('mongoose');
@@ -54,7 +56,7 @@ const getPlacesByUserId = async (req, res, next) => {
 const createPlace = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return next(new HttpError("invalid input passed", 422));
+    return next(new HttpError("invalid input passed bro", 422));
   }
 
   const { title, description, address, creator } = req.body;
@@ -71,9 +73,8 @@ const createPlace = async (req, res, next) => {
     description,
     address,
     location: coordinates,
-    image:
-      "https://static.wikia.nocookie.net/bobsburgerpedia/images/8/88/Bob%27s_Burgers_Restaurant.png/revision/latest/thumbnail/width/360/height/450?cb=20150920035740",
-    creator,
+    image: req.file.path,
+    creator
   });
 
   let user;
@@ -152,6 +153,8 @@ const deletePlace = async (req, res, next) => {
     return next(error);
   }
 
+  const imagePath = place.image;
+
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
@@ -163,6 +166,8 @@ const deletePlace = async (req, res, next) => {
     const error = new HttpError("could not delete place bruh", 500);
     return next(error);
   }
+
+  fs.unlink(imagePath, err => console.log(err));
 
   res.status(200).json({ message: "deleted the place." });
 };
