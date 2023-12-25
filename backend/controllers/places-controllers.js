@@ -78,7 +78,7 @@ const createPlace = async (req, res, next) => {
 
   let user;
   try {
-    user = User.findById(creator);
+    user = await User.findById(creator);
   } catch (err) {
     next(new HttpError("creating place failed", 500));
   }
@@ -92,10 +92,10 @@ const createPlace = async (req, res, next) => {
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await createdPlace.save({ session: sess });
-    user.places.push(createPlace);
-    await user.save({ session: sess });
-    await session.commitTransaction();
+    await createdPlace.save({ session: sess }); 
+    user.places.push(createdPlace); 
+    await user.save({ session: sess }); 
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError("create place failed", 500);
     return next(error);
@@ -155,12 +155,12 @@ const deletePlace = async (req, res, next) => {
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await Place.deleteOne({ id: place.id, session: sess });
+    await place.deleteOne({ session: sess });
     place.creator.places.pull(place);
     await place.creator.save({ session: sess });
     await sess.commitTransaction();
   } catch (err) {
-    const error = new HttpError("could not delete place", 500);
+    const error = new HttpError("could not delete place bruh", 500);
     return next(error);
   }
 
